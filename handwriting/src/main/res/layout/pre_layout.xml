@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/secure"
+            android:layout_alignParentTop="true" android:layout_centerHorizontal="true"
+            android:layout_marginTop="96dp" android:onClick="onImageClick" android:nestedScrollingEnabled="false"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/logup"
+            android:id="@+id/login"
+            android:onClick="onLogupClick"
+            android:layout_marginBottom="70dp"
+            android:theme="@style/MyButton"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/logup" android:layout_alignEnd="@+id/logup"
+            android:layout_marginTop="3dp"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:id="@+id/logup"
+            android:theme="@style/MyButton"
+            android:layout_above="@+id/login" android:layout_centerHorizontal="true" android:layout_marginTop="2dp"
+            android:layout_marginBottom="15dp" android:onClick="onLoginClick"/>
+</RelativeLayout>

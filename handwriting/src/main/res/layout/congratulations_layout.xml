@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/result1"
+            android:id="@+id/result1"
+            android:layout_marginTop="109dp" android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/result2"
+            android:id="@+id/result2"
+            android:layout_alignTop="@+id/result1" android:layout_toRightOf="@+id/result3"
+            android:layout_toEndOf="@+id/result3"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/result3"
+            android:id="@+id/result3" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
+            android:layout_marginBottom="139dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/label_congr"
+            android:id="@+id/congratulations_label" android:layout_alignParentTop="true" android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp" android:gravity="center" android:textStyle="bold"/>
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/back_button"
+            android:id="@+id/back" android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
+            android:onClick="backToPreLayout" android:theme="@style/submit"
+            android:background="@drawable/rounded_button" android:layout_marginBottom="30sp"/>
+</RelativeLayout>
