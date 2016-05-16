@@ -27,6 +27,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static kpi.security.keyboard.handwriting.data.Utils.fisherCheck;
+
 public class MainActivity extends AppCompatActivity{
     /**
      * full list of users, analog db, stored in shared preferences
@@ -57,8 +59,6 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Log.v("SAVE_AFTER", String.valueOf(savedInstanceState.getInt("test")));
-        //Toast.makeText(getApplicationContext(),userList.toString(),Toast.LENGTH_LONG).show();
 
         Button submit=(Button) findViewById(R.id.button);
         submit.setTextColor(Color.parseColor("#FFFAFA"));
@@ -68,6 +68,28 @@ public class MainActivity extends AppCompatActivity{
 
         usernameEditText = (EditText) findViewById(R.id.username);
         usernameEditText.setGravity(Gravity.CENTER);
+        usernameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                for (Account user:userList) {
+                    if ((user.getUsername().equals(usernameEditText.getText().toString().trim()))&&
+                            type.equals("study")){
+                        Toast.makeText(getApplicationContext(),"This username already in use",Toast.LENGTH_LONG).show();
+                        usernameEditText.clearAnimation();
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         textView = (TextView) findViewById(R.id.textView);
         textView.setTextColor(Color.parseColor("#757575"));
@@ -116,11 +138,13 @@ public class MainActivity extends AppCompatActivity{
 
             @Override
             public void afterTextChanged(Editable s) {
-                timer+=System.currentTimeMillis();
-                if (pressingLength.get(current_letter)==null){
-                    pressingLength.put(current_letter,timer);
-                }else {
-                    pressingLength.put(current_letter,timer+pressingLength.get(current_letter));
+                if (textView.getText().toString().contains(current_letter)){
+                    timer+=System.currentTimeMillis();
+                    if (pressingLength.get(current_letter)==null){
+                        pressingLength.put(current_letter,timer);
+                    }else {
+                        pressingLength.put(current_letter+timer,timer);
+                    }
                 }
             }
         });
@@ -138,8 +162,9 @@ public class MainActivity extends AppCompatActivity{
                         return;
                     }
                 }
+                //TODO: outline wrong data
                 Account account=new Account(usernameEditText.getText().toString(),pressingLength,
-                        Utils.dispertion(pressingLength,Utils.mathExpectation(pressingLength)),fullTime,del_counter);
+                        (ArrayList<Double>) Utils.dispersion(pressingLength,Utils.mathExpectation(pressingLength)),fullTime,del_counter);
                 userList.add(account);
                 setAccountList();
 
@@ -150,14 +175,21 @@ public class MainActivity extends AppCompatActivity{
 
 
             }else if(type.equals("recognition")){
-
+                String nickname=usernameEditText.getText().toString();
                 getAccountList();
                 for (Account user:userList) {
-                    if (user.getUsername().equals(usernameEditText.getText().toString())){
+                    if (user.getUsername().equals(nickname)){
 
-                        //TODO: verifier
+                        //TODO: better verifier
+                        if(fisherCheck(user.getS(),Utils.dispersion(pressingLength,Utils.mathExpectation(pressingLength)))){
+                            Intent intent=new Intent(this,CongratulationsActivity.class).putExtra(Intent.EXTRA_TEXT,fullTime)
+                                    .putExtra("del",del_counter).putExtra("MAP",pressingLength);
+                            startActivity(intent);
+                        }
+
                     }
                 }
+                Toast.makeText(getApplicationContext(),"User doesn't exists",Toast.LENGTH_LONG).show();
 
                 Toast.makeText(getApplicationContext(),userList.toString(),Toast.LENGTH_LONG).show();
             }
