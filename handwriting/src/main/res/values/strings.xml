@@ -17,4 +17,5 @@
     <string name="reg_label">Registration</string>
     <string name="label_congr">Successful registration, some information:</string>
     <string name="back_button">BACK</string>
+    <string name="show_userlist">Show users</string>
 </resources>

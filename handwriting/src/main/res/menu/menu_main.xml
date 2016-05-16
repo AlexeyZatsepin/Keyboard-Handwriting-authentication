@@ -10,4 +10,8 @@
           android:title="@string/help"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+    <item android:id="@+id/show_userlist"
+          android:title="@string/show_userlist"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
 </menu>

@@ -177,8 +177,13 @@ public class MainActivity extends AppCompatActivity{
             }else if(type.equals("recognition")){
                 String nickname=usernameEditText.getText().toString();
                 getAccountList();
+
+                Log.v("USERLIST",userList.toString());
+
                 for (Account user:userList) {
                     if (user.getUsername().equals(nickname)){
+
+                        Log.v("USERLIST",pressingLength.toString());
 
                         //TODO: better verifier
                         if(fisherCheck(user.getS(),Utils.dispersion(pressingLength,Utils.mathExpectation(pressingLength)))){
@@ -217,6 +222,12 @@ public class MainActivity extends AppCompatActivity{
             return true;
         }else if (id == R.id.action_help){
             showHelp();
+        }else if(id== R.id.show_userlist){
+            StringBuilder sb=new StringBuilder();
+            for (Account user:userList) {
+                sb.append(user.getUsername());
+            }
+            Toast.makeText(getApplicationContext(),sb.toString(),Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);

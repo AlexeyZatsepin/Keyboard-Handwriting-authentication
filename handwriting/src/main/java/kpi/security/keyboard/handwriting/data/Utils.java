@@ -1,9 +1,10 @@
 package kpi.security.keyboard.handwriting.data;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import android.util.Log;
+import android.util.SparseArray;
+import kpi.security.keyboard.handwriting.MainActivity;
+
+import java.util.*;
 
 import static java.lang.Math.*;
 
@@ -101,12 +102,28 @@ public final class Utils {
      */
     public static boolean fisherCheck(List<Double> SStandard,List<Double> SAuth){
         Double Fp;
-        List<Double> theoretical=getTheoreticalFisher();
+
+        /**
+         * use temporary list link to arraylist object
+         */
+        if (SStandard.size()<SAuth.size()){
+            List<Double> temp=new ArrayList<Double>(SStandard.size());
+            Collections.copy(temp,SAuth);
+            SAuth=temp;
+        }else if(SStandard.size()>SAuth.size()){
+            List<Double> temp=new ArrayList<Double>(SAuth.size());
+            Collections.copy(temp,SStandard);
+            SStandard=temp;
+        }
+        Log.v("USERLIST Standart",SStandard.toString());
+        Log.v("USERLIST Auth",SAuth.toString());
+
+        Double theoretical=getTheoreticalFisher(SAuth.size());
         for (int i = 0; i < SStandard.size(); i++) {
             Double Smin=min(SStandard.get(i),SAuth.get(i));
             Double Smax=max(SStandard.get(i),SAuth.get(i));
             Fp=Smax/Smin;
-            if (Fp<theoretical.get(SStandard.size()+1)){
+            if (Fp<theoretical){
                 return false;
             }
         }
@@ -115,8 +132,58 @@ public final class Utils {
 
     /**
      * @return theoretical fishers table
+     * table realized by SparseArray, in connection with better performance than HashMap
      */
-    private static List<Double> getTheoreticalFisher(){
+    private static Double getTheoreticalFisher(int n){
+        SparseArray<Double> theorFisher = new SparseArray<Double>();
+        theorFisher.put(1,12.706);
+        theorFisher.put(2,4.3027);
+        theorFisher.put(3,3.1825);
+        theorFisher.put(4,2.7764);
+        theorFisher.put(5,2.5706);
+        theorFisher.put(6,2.4469);
+        theorFisher.put(7,2.3646);
+        theorFisher.put(8,2.3060);
+        theorFisher.put(9,2.2622);
+        theorFisher.put(10,2.2281);
+        theorFisher.put(11,2.2010);
+        theorFisher.put(12,2.1788);
+        theorFisher.put(13,2.1604);
+        theorFisher.put(14,2.1448);
+        theorFisher.put(15,2.1315);
+        theorFisher.put(16,2.1199);
+        theorFisher.put(17,2.1098);
+        theorFisher.put(18,2.1009);
+        theorFisher.put(19,2.0930);
+        theorFisher.put(20,2.0860);
+        theorFisher.put(21,2.0796);
+        theorFisher.put(22,2.0739);
+        theorFisher.put(23,2.0687);
+        theorFisher.put(24,2.0639);
+        theorFisher.put(25,2.0595);
+        theorFisher.put(26,2.0555);
+        theorFisher.put(27,2.0518);
+        theorFisher.put(28,2.0484);
+        theorFisher.put(29,2.0452);
+        theorFisher.put(30,2.0423);
+//40
+        theorFisher.put(40,2.0211);
+//60
+        theorFisher.put(60,2.0003);
+        if( n >= 60){
+            return theorFisher.get(60);
+        }else if(n>=40){
+            return theorFisher.get(40);
+        }else if(n>=30){
+            return theorFisher.get(30);
+        }else {
+            return theorFisher.get(n);
+        }
+    }
+
+}
+
+/*
         List<Double> theorFisher = new ArrayList<Double>();
         theorFisher.add(3.841);
         theorFisher.add(5.991);
@@ -149,6 +216,4 @@ public final class Utils {
         theorFisher.add(42.557);
         theorFisher.add(43.773);
         return theorFisher;
-    }
-
-}
+        */
