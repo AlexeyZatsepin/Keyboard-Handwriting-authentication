@@ -7,8 +7,8 @@ import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.text.*;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
@@ -117,20 +117,33 @@ public class MainActivity extends AppCompatActivity{
                     del_counter++;
                     current_letter="backspace";
                 }else{
-                    /*
-                    Log.v("TEXT","------------");
-                    Log.v("TEXT",s.toString());
-                    Log.v("TEXT",String.valueOf(s.charAt(start+before)));
-                    Log.v("TEXT", String.valueOf(start+before));
-                    Log.v("TEXT","------------");
-                    */
+//                    Log.v("TEXT","------------");
+//                    Log.v("TEXT",s.toString());
+//                    Log.v("TEXT",String.valueOf(s.charAt(start+before)));
+//                    Log.v("TEXT", String.valueOf(start+before));
+//                    Log.v("TEXT","------------");
                     current_letter=String.valueOf(s.charAt(start+before));
                 }
-                if(textView.getText().equals(editText.getText().toString().trim())){
+                String editTextValue = editText.getText().toString().trim();
+                if(textView.getText().equals(editTextValue)){
                     InputMethodManager imm = (InputMethodManager) getSystemService(
                             INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                 }
+                String standardText = textView.getText().toString();
+                if(standardText.contains(editTextValue)){
+                    standardText=standardText.replace(editTextValue,"<font color='#43A047'>"+editTextValue+"</font>");
+                    textView.setText(Html.fromHtml(standardText));
+                }
+//                for (char letter:editTextValue.toCharArray()) {
+//                    if(!text.contains(String.valueOf(letter))){
+//                        Spannable letterToSpan = new SpannableString(String.valueOf(letter));
+//                        letterToSpan.setSpan(new ForegroundColorSpan(Color.RED),0,1,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                        String span = editTextValue.substring(0, editTextValue.length() - 2) + letterToSpan;
+//                        editText.setText(span);
+//                        editText.setSelection(editText.getText().length());
+//                    }
+//                }
             }
 
             @Override
@@ -188,7 +201,6 @@ public class MainActivity extends AppCompatActivity{
                                 &&fullTimeCheker(fullTime,user.getFullTime())){
 
                             Log.v(LOG_TAG,"Fisher success");
-
 //                            Intent intent=new Intent(this,CongratulationActivity.class).putExtra(Intent.EXTRA_TEXT,fullTime)
 //                                    .putExtra("del",del_counter).putExtra("MAP",(HashMap<String,Long>)clearPressingLength);
                             Intent intent=new Intent(this,CongratulationActivity.class).putExtra(Intent.EXTRA_TEXT,user);
@@ -202,7 +214,6 @@ public class MainActivity extends AppCompatActivity{
                         Toast.makeText(getApplicationContext(),"User doesn't exists",Toast.LENGTH_LONG).show();
                     }
                 }
-                //Toast.makeText(getApplicationContext(),userList.toString(),Toast.LENGTH_LONG).show();
             }
         }else {
             Toast.makeText(getApplicationContext(),"Text isn't correct",Toast.LENGTH_LONG).show();
@@ -230,7 +241,7 @@ public class MainActivity extends AppCompatActivity{
             getAccountList();
             StringBuilder sb=new StringBuilder();
             for (Account user:userList) {
-                sb.append(user.getUsername());
+                sb.append(user.getUsername()).append(";");
             }
             Toast.makeText(getApplicationContext(),sb.toString(),Toast.LENGTH_LONG).show();
         }
@@ -251,7 +262,7 @@ public class MainActivity extends AppCompatActivity{
         String json = gson.toJson(userList);
 
         editor.putString("USERLIST", json);
-        editor.apply();// .commit();
+        editor.apply();//.commit();
     }
 
     private void getAccountList(){

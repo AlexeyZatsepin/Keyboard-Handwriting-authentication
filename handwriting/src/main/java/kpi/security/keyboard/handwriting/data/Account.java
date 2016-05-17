@@ -15,11 +15,11 @@ import java.util.HashMap;
 
 // User class for save istance in android when app is destroyed //Bundle.putParcelable()
 public class Account implements Parcelable{
-    String username;
-    HashMap<String,Long> y;
-    ArrayList<Double> s;
-    long fullTime;
-    int delCounter;
+    private String username;
+    private HashMap<String,Long> y;
+    private ArrayList<Double> s;
+    private long fullTime;
+    private int delCounter;
 
     public Account(String username, HashMap<String, Long> y, ArrayList<Double> s, long fullTime, int delCounter) {
         this.username = username;
