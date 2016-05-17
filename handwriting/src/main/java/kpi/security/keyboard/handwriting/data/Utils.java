@@ -2,7 +2,6 @@ package kpi.security.keyboard.handwriting.data;
 
 import android.util.Log;
 import android.util.SparseArray;
-import kpi.security.keyboard.handwriting.MainActivity;
 
 import java.util.*;
 
@@ -102,27 +101,33 @@ public final class Utils {
      */
     public static boolean fisherCheck(List<Double> SStandard,List<Double> SAuth){
         Double Fp;
-
+        int standardSize = SStandard.size();
+        int authSize = SAuth.size();
         /**
          * use temporary list link to arraylist object
          */
-        if (SStandard.size()<SAuth.size()){
-            List<Double> temp=new ArrayList<Double>(SStandard.size());
-            Collections.copy(temp,SAuth);
+        if (standardSize < authSize){
+            List<Double> temp=new ArrayList<Double>(standardSize);
+            for (int i = 0; i < standardSize; i++) {
+                temp.add(SAuth.get(i));
+            }
             SAuth=temp;
-        }else if(SStandard.size()>SAuth.size()){
-            List<Double> temp=new ArrayList<Double>(SAuth.size());
-            Collections.copy(temp,SStandard);
+        }else if(standardSize > authSize){
+            List<Double> temp=new ArrayList<Double>(authSize);
+            for (int i = 0; i < authSize; i++) {
+                temp.add(SStandard.get(i));
+            }
             SStandard=temp;
         }
         Log.v("USERLIST Standart",SStandard.toString());
         Log.v("USERLIST Auth",SAuth.toString());
 
-        Double theoretical=getTheoreticalFisher(SAuth.size());
-        for (int i = 0; i < SStandard.size(); i++) {
+        Double theoretical=getTheoreticalFisher(authSize);
+        for (int i = 0; i < standardSize; i++) {
             Double Smin=min(SStandard.get(i),SAuth.get(i));
             Double Smax=max(SStandard.get(i),SAuth.get(i));
             Fp=Smax/Smin;
+            Log.d("USERLIST", String.valueOf(Fp));
             if (Fp<theoretical){
                 return false;
             }

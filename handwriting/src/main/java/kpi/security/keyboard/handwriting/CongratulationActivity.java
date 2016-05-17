@@ -1,14 +1,19 @@
 package kpi.security.keyboard.handwriting;
 
-import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -20,12 +25,12 @@ import java.util.Map;
  *
  * @author Alex
  */
-public class CongratulationsActivity extends AppCompatActivity {
+public class CongratulationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.congratulations_layout);
+        setContentView(R.layout.end_activity_layout);
         TextView label= (TextView) findViewById(R.id.congratulations_label);
         label.setTextColor(Color.parseColor("#607D8B"));
         Button back=(Button) findViewById(R.id.back);
@@ -38,18 +43,15 @@ public class CongratulationsActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
             long fullTime = intent.getLongExtra(Intent.EXTRA_TEXT,0);
             int del_counter=intent.getIntExtra("del",0);
-            HashMap<String,Long> pressingLenght = (HashMap<String, Long>)intent.getSerializableExtra("MAP");
+            Map<String,Long> pressingLength = (HashMap<String, Long>)intent.getSerializableExtra("MAP");
             StringBuilder sb=new StringBuilder();
-            for (String key:pressingLenght.keySet()) {
-                sb.append(key).append(":").append(pressingLenght.get(key)).append("\n");
+            for (String key:pressingLength.keySet()) {
+                sb.append(key).append(":").append(pressingLength.get(key)).append("\n");
             }
-            //String count = intent.getStringExtra("Backspaces");
-            result1.setText("Time:" + fullTime);
-            result2.setText("Backspaces:"+ del_counter);
-            result3.setText("Frequency:"+ sb.toString());
+            result1.setText(String.format("Time:%d", fullTime));
+            result2.setText(String.format("Backspaces:%d", del_counter));
+            result3.setText(String.format("Frequency:%s", sb.toString()));
         }
-
-
     }
 
     public void backToPreLayout(View view){
@@ -58,11 +60,6 @@ public class CongratulationsActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
-
-
 }

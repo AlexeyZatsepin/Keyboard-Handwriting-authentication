@@ -12,7 +12,7 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-                android:name=".CongratulationsActivity"
+                android:name=".CongratulationActivity"
                 android:label="@string/title_congratulations"
                 >
         </activity>

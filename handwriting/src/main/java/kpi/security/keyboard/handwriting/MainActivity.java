@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,8 +25,10 @@ import kpi.security.keyboard.handwriting.data.Utils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static kpi.security.keyboard.handwriting.data.Utils.fisherCheck;
+import static kpi.security.keyboard.handwriting.data.Utils.*;
 
 public class MainActivity extends AppCompatActivity{
     /**
@@ -71,9 +72,7 @@ public class MainActivity extends AppCompatActivity{
         usernameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 for (Account user:userList) {
@@ -84,10 +83,8 @@ public class MainActivity extends AppCompatActivity{
                     }
                 }
             }
-
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
 
@@ -118,7 +115,6 @@ public class MainActivity extends AppCompatActivity{
                 if (s.length()<=text.length()) {
                     del_counter++;
                     current_letter="del";
-
                 }else{
                     /*
                     Log.v("TEXT","------------");
@@ -146,6 +142,9 @@ public class MainActivity extends AppCompatActivity{
                         pressingLength.put(current_letter+timer,timer);
                     }
                 }
+                else{
+                    //TODO:make last letter red
+                }
             }
         });
 
@@ -153,43 +152,50 @@ public class MainActivity extends AppCompatActivity{
 
     public void onClick(View view){
         if (textView.getText().equals(editText.getText().toString().trim())){
+            String username = usernameEditText.getText().toString();
+            List<Double> mathExpectation = mathExpectation(pressingLength); // base value
+            List<Double> dispersion = dispersion(pressingLength, mathExpectation); //base value
+
+            Map<String,Long> clearPressingLength = discardingOutliers(pressingLength,dispersion,mathExpectation); // delete "wrong values"
+            mathExpectation = mathExpectation(clearPressingLength); // clear value
+            dispersion = dispersion(clearPressingLength,mathExpectation); // clear value
+
             if (type.equals("study")){
                 fullTime+=System.currentTimeMillis();
 
                 for (Account user:userList) {
-                    if (user.getUsername().equals(usernameEditText.getText().toString())){
+                    if (user.getUsername().equals(username)){
                         Toast.makeText(getApplicationContext(),"This username already in use",Toast.LENGTH_LONG).show();
                         return;
                     }
                 }
-                //TODO: outline wrong data
-                Account account=new Account(usernameEditText.getText().toString(),pressingLength,
-                        (ArrayList<Double>) Utils.dispersion(pressingLength,Utils.mathExpectation(pressingLength)),fullTime,del_counter);
+                Account account = new Account(username, (HashMap<String, Long>) clearPressingLength,
+                            (ArrayList<Double>) dispersion, fullTime, del_counter);
                 userList.add(account);
                 setAccountList();
 
-                //Toast.makeText(getApplicationContext(),  String.valueOf(fullTime),Toast.LENGTH_LONG).show();
-                Intent intent=new Intent(this,CongratulationsActivity.class).putExtra(Intent.EXTRA_TEXT,fullTime)
-                        .putExtra("del",del_counter).putExtra("MAP",pressingLength);
-                startActivity(intent);
+                Toast.makeText(getApplicationContext(),"Successfuly registrated",Toast.LENGTH_LONG).show();
+                startActivity(new Intent(this,PreActivity.class));
 
 
             }else if(type.equals("recognition")){
-                String nickname=usernameEditText.getText().toString();
                 getAccountList();
 
-                Log.v("USERLIST",userList.toString());
-
                 for (Account user:userList) {
-                    if (user.getUsername().equals(nickname)){
+                    if (user.getUsername().equals(username)){
 
-                        Log.v("USERLIST",pressingLength.toString());
+                        Log.v("USERLIST",clearPressingLength.toString());
 
                         //TODO: better verifier
-                        if(fisherCheck(user.getS(),Utils.dispersion(pressingLength,Utils.mathExpectation(pressingLength)))){
-                            Intent intent=new Intent(this,CongratulationsActivity.class).putExtra(Intent.EXTRA_TEXT,fullTime)
-                                    .putExtra("del",del_counter).putExtra("MAP",pressingLength);
+                        if(fisherCheck(user.getS(), dispersion)){
+
+                            Log.v("USERLIST","Fisher success");
+
+                            Intent intent=new Intent(this,CongratulationActivity.class).putExtra(Intent.EXTRA_TEXT,fullTime)
+                                    .putExtra("del",del_counter).putExtra("MAP",(HashMap<String,Long>)clearPressingLength);
                             startActivity(intent);
+                        }else {
+                            Toast.makeText(getApplicationContext(),"Try again, bad handwriting",Toast.LENGTH_LONG).show();
                         }
 
                     }
@@ -205,7 +211,6 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -215,14 +220,14 @@ public class MainActivity extends AppCompatActivity{
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
         }else if (id == R.id.action_help){
             showHelp();
         }else if(id== R.id.show_userlist){
+            getAccountList();
             StringBuilder sb=new StringBuilder();
             for (Account user:userList) {
                 sb.append(user.getUsername());
@@ -257,7 +262,7 @@ public class MainActivity extends AppCompatActivity{
         userList = gson.fromJson(json, type);
     }
 
-    public void showHelp(){
+    private void showHelp(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(getString(R.string.alert_text));
         AlertDialog alertDialog = alertDialogBuilder.create();
