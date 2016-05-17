@@ -20,7 +20,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import kpi.security.keyboard.handwriting.data.Account;
-import kpi.security.keyboard.handwriting.data.Utils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -31,6 +30,7 @@ import java.util.Map;
 import static kpi.security.keyboard.handwriting.data.Utils.*;
 
 public class MainActivity extends AppCompatActivity{
+    private String LOG_TAG=MainActivity.class.getCanonicalName();
     /**
      * full list of users, analog db, stored in shared preferences
      */
@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity{
     private long timer;
     private String text;
     private String current_letter;
+    private int counter=0;
     /**
      * Account data variables
      */
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity{
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length()<=text.length()) {
                     del_counter++;
-                    current_letter="del";
+                    current_letter="backspace";
                 }else{
                     /*
                     Log.v("TEXT","------------");
@@ -139,7 +140,7 @@ public class MainActivity extends AppCompatActivity{
                     if (pressingLength.get(current_letter)==null){
                         pressingLength.put(current_letter,timer);
                     }else {
-                        pressingLength.put(current_letter+timer,timer);
+                        pressingLength.put(current_letter+counter++,timer);
                     }
                 }
                 else{
@@ -152,6 +153,8 @@ public class MainActivity extends AppCompatActivity{
 
     public void onClick(View view){
         if (textView.getText().equals(editText.getText().toString().trim())){
+            fullTime+=System.currentTimeMillis();
+
             String username = usernameEditText.getText().toString();
             List<Double> mathExpectation = mathExpectation(pressingLength); // base value
             List<Double> dispersion = dispersion(pressingLength, mathExpectation); //base value
@@ -159,9 +162,7 @@ public class MainActivity extends AppCompatActivity{
             Map<String,Long> clearPressingLength = discardingOutliers(pressingLength,dispersion,mathExpectation); // delete "wrong values"
             mathExpectation = mathExpectation(clearPressingLength); // clear value
             dispersion = dispersion(clearPressingLength,mathExpectation); // clear value
-
-            if (type.equals("study")){
-                fullTime+=System.currentTimeMillis();
+            if (type.equals(getString(R.string.study_mode))){
 
                 for (Account user:userList) {
                     if (user.getUsername().equals(username)){
@@ -176,33 +177,32 @@ public class MainActivity extends AppCompatActivity{
 
                 Toast.makeText(getApplicationContext(),"Successfuly registrated",Toast.LENGTH_LONG).show();
                 startActivity(new Intent(this,PreActivity.class));
-
-
-            }else if(type.equals("recognition")){
+            }else if(type.equals(getString(R.string.recognition_mode))){
                 getAccountList();
-
                 for (Account user:userList) {
                     if (user.getUsername().equals(username)){
 
-                        Log.v("USERLIST",clearPressingLength.toString());
+                        Log.v(LOG_TAG,clearPressingLength.toString());
 
-                        //TODO: better verifier
-                        if(fisherCheck(user.getS(), dispersion)){
+                        if(fisherCheck(user.getS(), dispersion)&&delCounterChecker(del_counter,user.getDelCounter())
+                                &&fullTimeCheker(fullTime,user.getFullTime())){
 
-                            Log.v("USERLIST","Fisher success");
+                            Log.v(LOG_TAG,"Fisher success");
 
-                            Intent intent=new Intent(this,CongratulationActivity.class).putExtra(Intent.EXTRA_TEXT,fullTime)
-                                    .putExtra("del",del_counter).putExtra("MAP",(HashMap<String,Long>)clearPressingLength);
+//                            Intent intent=new Intent(this,CongratulationActivity.class).putExtra(Intent.EXTRA_TEXT,fullTime)
+//                                    .putExtra("del",del_counter).putExtra("MAP",(HashMap<String,Long>)clearPressingLength);
+                            Intent intent=new Intent(this,CongratulationActivity.class).putExtra(Intent.EXTRA_TEXT,user);
                             startActivity(intent);
                         }else {
                             Toast.makeText(getApplicationContext(),"Try again, bad handwriting",Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(this,PreActivity.class));
                         }
 
+                    }else{
+                        Toast.makeText(getApplicationContext(),"User doesn't exists",Toast.LENGTH_LONG).show();
                     }
                 }
-                Toast.makeText(getApplicationContext(),"User doesn't exists",Toast.LENGTH_LONG).show();
-
-                Toast.makeText(getApplicationContext(),userList.toString(),Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),userList.toString(),Toast.LENGTH_LONG).show();
             }
         }else {
             Toast.makeText(getApplicationContext(),"Text isn't correct",Toast.LENGTH_LONG).show();

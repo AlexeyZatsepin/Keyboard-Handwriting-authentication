@@ -19,4 +19,8 @@
     <string name="back_button">BACK</string>
     <string name="show_userlist">Show users</string>
     <string name="success">You successfully registrated!</string>
+
+    <string name="recognition_mode">recognition</string>
+    <string name="study_mode">study</string>
+
 </resources>

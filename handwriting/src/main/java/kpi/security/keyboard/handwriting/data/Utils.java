@@ -112,12 +112,14 @@ public final class Utils {
                 temp.add(SAuth.get(i));
             }
             SAuth=temp;
+            authSize = standardSize;
         }else if(standardSize > authSize){
             List<Double> temp=new ArrayList<Double>(authSize);
             for (int i = 0; i < authSize; i++) {
                 temp.add(SStandard.get(i));
             }
             SStandard=temp;
+            standardSize=authSize;
         }
         Log.v("USERLIST Standart",SStandard.toString());
         Log.v("USERLIST Auth",SAuth.toString());
@@ -128,13 +130,36 @@ public final class Utils {
             Double Smax=max(SStandard.get(i),SAuth.get(i));
             Fp=Smax/Smin;
             Log.d("USERLIST", String.valueOf(Fp));
-            if (Fp<theoretical){
+            if (Fp>theoretical){
                 return false;
             }
         }
         return true;
     }
 
+    /**
+     *
+     * @param fullTime time of auth
+     * @param standard etalon
+     * @return true if verified
+     */
+    public static boolean fullTimeCheker(long fullTime,long standard){
+        int limit = 20000;
+        long value=fullTime-standard;
+        return !((value > limit) && (value > 0) || (value < 0) && (value < -limit));
+    }
+
+    /**
+     *
+     * @param counter backspaces count in auth
+     * @param standard backspaces count in account data
+     * @return true if verified
+     */
+    public static boolean delCounterChecker(int counter,int standard){
+        int limit = 6;
+        int value = counter - standard;
+        return !((value > limit) && (value > 0) || (value < 0) && (value < -limit));
+    }
     /**
      * @return theoretical fishers table
      * table realized by SparseArray, in connection with better performance than HashMap
