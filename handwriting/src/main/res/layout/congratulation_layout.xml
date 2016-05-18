@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="match_parent" android:orientation="vertical">
+              android:layout_height="wrap_content" android:orientation="vertical" android:background="#E3F2FD">
 
     <TextView
             android:layout_width="wrap_content"
@@ -9,25 +14,96 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/title_congratulations"
             android:id="@+id/congratulations_label"
-            android:textStyle="bold" android:gravity="center"
-            android:layout_gravity="center_horizontal"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/result1"
-            android:id="@+id/result1"
-            android:layout_marginTop="2dp" android:layout_gravity="center_horizontal"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/result2"
-            android:id="@+id/result2" android:layout_marginTop="2dp" android:layout_gravity="center_horizontal"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/result3"
-            android:id="@+id/result3"
-            android:layout_gravity="center_horizontal"/>
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal" android:layout_marginTop="10dp"/>
+    <TableLayout android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:stretchColumns="*" android:layout_marginLeft="20dp" android:layout_marginRight="20dp"
+                 android:layout_marginTop="20dp">
+        <TableRow
+                android:layout_width="match_parent"
+                android:shrinkColumns="0, true">
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/label_left"
+                android:id="@+id/label_left"
+                android:layout_gravity="top|center_horizontal"
+                android:singleLine="false"
+                android:maxWidth="170dp" android:capitalize="words" android:textSize="20sp" android:textStyle="bold"/>
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_right"
+                android:id="@+id/label_right"
+                android:singleLine="false" android:layout_gravity="center_horizontal" android:maxWidth="170dp"
+                android:capitalize="words" android:textSize="20sp" android:textStyle="bold"/>
+        </TableRow>
+        <TableRow android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:shrinkColumns="0, true">
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/result1"
+                android:id="@+id/resultTime1"
+                android:singleLine="false" android:maxWidth="170dp"/>
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/result1"
+                android:id="@+id/resultTime2"
+                android:singleLine="false" android:maxWidth="170dp"/>
+        </TableRow>
+        <TableRow android:layout_width="match_parent" android:layout_height="match_parent"
+                  android:shrinkColumns="0, true">
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/result1"
+                android:id="@+id/resultBack1"
+                android:singleLine="false" android:maxWidth="170dp"/>
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/result1"
+                android:id="@+id/resultBack2"
+                android:singleLine="false" android:maxWidth="170dp"/>
+        </TableRow>
+        <TableRow android:layout_height="match_parent" android:layout_width="match_parent"
+                  android:shrinkColumns="0, true">
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/result1"
+                android:id="@+id/resultY1"
+                android:singleLine="false" android:maxWidth="170dp"/>
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/result1"
+                android:id="@+id/resultY2"
+                android:singleLine="false" android:maxWidth="170dp"/>
+        </TableRow>
+        <TableRow android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:shrinkColumns="0, true">
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/result1"
+                android:id="@+id/resultS1"
+                android:singleLine="false" android:maxWidth="170dp"/>
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/result1"
+                android:id="@+id/resultS2"
+                android:singleLine="false" android:maxWidth="170dp"/>
+        </TableRow>
+
+    </TableLayout>
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,5 +111,6 @@
             android:id="@+id/back"
             android:onClick="backToPreLayout" android:theme="@style/submit"
             android:background="@drawable/rounded_button"
-            android:layout_gravity="center_horizontal" android:layout_marginTop="340dp"/>
+            android:layout_gravity="center_horizontal" android:layout_marginTop="50dp"/>
 </LinearLayout>
+</ScrollView>

@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.*;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
@@ -20,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import kpi.security.keyboard.handwriting.data.Account;
+import kpi.security.keyboard.handwriting.data.Bounds;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -31,6 +31,7 @@ import static kpi.security.keyboard.handwriting.data.Utils.*;
 
 public class MainActivity extends AppCompatActivity{
     private String LOG_TAG=MainActivity.class.getCanonicalName();
+    private static final String USERLIST_TAG = "USERLIST";
     /**
      * full list of users, analog db, stored in shared preferences
      */
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getAccountList();
 
         Button submit=(Button) findViewById(R.id.button);
         submit.setTextColor(Color.parseColor("#FFFAFA"));
@@ -125,7 +127,7 @@ public class MainActivity extends AppCompatActivity{
                     current_letter=String.valueOf(s.charAt(start+before));
                 }
                 String editTextValue = editText.getText().toString().trim();
-                if(textView.getText().equals(editTextValue)){
+                if(textView.getText().toString().equals(editTextValue)){
                     InputMethodManager imm = (InputMethodManager) getSystemService(
                             INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
@@ -165,7 +167,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void onClick(View view){
-        if (textView.getText().equals(editText.getText().toString().trim())){
+        if (textView.getText().toString().equals(editText.getText().toString().trim())){
             fullTime+=System.currentTimeMillis();
 
             String username = usernameEditText.getText().toString();
@@ -175,8 +177,8 @@ public class MainActivity extends AppCompatActivity{
             Map<String,Long> clearPressingLength = discardingOutliers(pressingLength,dispersion,mathExpectation); // delete "wrong values"
             mathExpectation = mathExpectation(clearPressingLength); // clear value
             dispersion = dispersion(clearPressingLength,mathExpectation); // clear value
-            if (type.equals(getString(R.string.study_mode))){
 
+            if (type.equals(getString(R.string.study_mode))){
                 for (Account user:userList) {
                     if (user.getUsername().equals(username)){
                         Toast.makeText(getApplicationContext(),"This username already in use",Toast.LENGTH_LONG).show();
@@ -188,35 +190,37 @@ public class MainActivity extends AppCompatActivity{
                 userList.add(account);
                 setAccountList();
 
-                Toast.makeText(getApplicationContext(),"Successfuly registrated",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Successfully joined",Toast.LENGTH_LONG).show();
                 startActivity(new Intent(this,PreActivity.class));
             }else if(type.equals(getString(R.string.recognition_mode))){
-                getAccountList();
                 for (Account user:userList) {
                     if (user.getUsername().equals(username)){
 
-                        Log.v(LOG_TAG,clearPressingLength.toString());
-
-                        if(fisherCheck(user.getS(), dispersion)&&delCounterChecker(del_counter,user.getDelCounter())
-                                &&fullTimeCheker(fullTime,user.getFullTime())){
-
-                            Log.v(LOG_TAG,"Fisher success");
-//                            Intent intent=new Intent(this,CongratulationActivity.class).putExtra(Intent.EXTRA_TEXT,fullTime)
-//                                    .putExtra("del",del_counter).putExtra("MAP",(HashMap<String,Long>)clearPressingLength);
-                            Intent intent=new Intent(this,CongratulationActivity.class).putExtra(Intent.EXTRA_TEXT,user);
+                        if(fisherCheck(user.getS(), dispersion)
+                                && limitValueChecker(del_counter,user.getDelCounter(), Bounds.BACKSPACES_LIMIT)
+                                && limitValueChecker(fullTime,user.getFullTime(), Bounds.TIME_LIMIT)
+                                && studentCheck(user.getY(),clearPressingLength)){
+                            Account verified=new Account(username,(HashMap<String, Long>) clearPressingLength,
+                                    (ArrayList<Double>)dispersion,fullTime,del_counter);
+                            userList.remove(user);
+                            userList.add(verified);
+                            Intent intent=new Intent(this,CongratulationActivity.class).putExtra(Intent.EXTRA_TEXT,user).putExtra("DATA",verified);
                             startActivity(intent);
                         }else {
-                            Toast.makeText(getApplicationContext(),"Try again, bad handwriting",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(),"Please try again, bad handwriting",Toast.LENGTH_LONG).show();
                             startActivity(new Intent(this,PreActivity.class));
                         }
 
                     }else{
                         Toast.makeText(getApplicationContext(),"User doesn't exists",Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(this,PreActivity.class));
                     }
                 }
+                setAccountList();
             }
         }else {
             Toast.makeText(getApplicationContext(),"Text isn't correct",Toast.LENGTH_LONG).show();
+            editText.clearComposingText();
         }
     }
 
@@ -238,7 +242,6 @@ public class MainActivity extends AppCompatActivity{
         }else if (id == R.id.action_help){
             showHelp();
         }else if(id== R.id.show_userlist){
-            getAccountList();
             StringBuilder sb=new StringBuilder();
             for (Account user:userList) {
                 sb.append(user.getUsername()).append(";");
@@ -258,17 +261,15 @@ public class MainActivity extends AppCompatActivity{
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         SharedPreferences.Editor editor = sharedPrefs.edit();
         Gson gson = new Gson();
-
         String json = gson.toJson(userList);
-
-        editor.putString("USERLIST", json);
+        editor.putString(USERLIST_TAG, json);
         editor.apply();//.commit();
     }
 
     private void getAccountList(){
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         Gson gson = new Gson();
-        String json = sharedPrefs.getString("USERLIST", null);
+        String json = sharedPrefs.getString(USERLIST_TAG , null);
         Type type = new TypeToken<ArrayList<Account>>() {}.getType();
         userList = gson.fromJson(json, type);
     }
@@ -280,4 +281,27 @@ public class MainActivity extends AppCompatActivity{
         alertDialog.show();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        setAccountList();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        setAccountList();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        setAccountList();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getAccountList();
+    }
 }

@@ -42,7 +42,7 @@ public final class Utils {
      * 
      * @param pressingLength length of pause between clicks
      * @param mathExpectation mathExpectation values list 
-     * @return dispertion values list
+     * @return dispersion values list
      */
     public static List<Double> dispersion(Map<String,Long> pressingLength,List<Double> mathExpectation) {
         int N = pressingLength.size() - 1;
@@ -67,16 +67,16 @@ public final class Utils {
     /**
      * @return coefficients Student values list
      */
-    public static List<Double> coefficientStudenta(Map<String,Long> pressingLength,List<Double> mathExpectation,List<Double> dispersion){
-        //cof studenta
-        int i=0;
-        ArrayList<Double> coefficient=new ArrayList<Double>();
-        for (String key:pressingLength.keySet()) {
-            coefficient.add(abs((pressingLength.get(key)-mathExpectation.get(i))/dispersion.get(i)));
-            i++;
-        }
-        return coefficient;
-    }
+//    public static List<Double> coefficientStudenta(Map<String,Long> pressingLength,List<Double> mathExpectation,List<Double> dispersion){
+//        //cof studenta
+//        int i=0;
+//        ArrayList<Double> coefficient=new ArrayList<Double>();
+//        for (String key:pressingLength.keySet()) {
+//            coefficient.add(abs((pressingLength.get(key)-mathExpectation.get(i))/sqrt(dispersion.get(i))));
+//            i++;
+//        }
+//        return coefficient;
+//    }
 
 
     /**
@@ -124,41 +124,26 @@ public final class Utils {
         Log.v("USERLIST Standart",SStandard.toString());
         Log.v("USERLIST Auth",SAuth.toString());
 
-        Double theoretical=getTheoreticalFisher(authSize);
+        Double theoreticalF=getTheoreticalFisher(authSize);
         for (int i = 0; i < standardSize; i++) {
             Double Smin=min(SStandard.get(i),SAuth.get(i));
             Double Smax=max(SStandard.get(i),SAuth.get(i));
             Fp=Smax/Smin;
-            Log.d("USERLIST", String.valueOf(Fp));
-            if (Fp>theoretical){
+            if (Fp>theoreticalF){
                 return false;
             }
         }
         return true;
     }
-
     /**
      *
-     * @param fullTime time of auth
-     * @param standard etalon
+     * @param value backspaces count in auth, and time (fullTime)
+     * @param standard backspaces count in account data , and standart time
      * @return true if verified
      */
-    public static boolean fullTimeCheker(long fullTime,long standard){
-        int limit = 20000;
-        long value=fullTime-standard;
-        return !((value > limit) && (value > 0) || (value < 0) && (value < -limit));
-    }
-
-    /**
-     *
-     * @param counter backspaces count in auth
-     * @param standard backspaces count in account data
-     * @return true if verified
-     */
-    public static boolean delCounterChecker(int counter,int standard){
-        int limit = 6;
-        int value = counter - standard;
-        return !((value > limit) && (value > 0) || (value < 0) && (value < -limit));
+    public static boolean limitValueChecker(long value, long standard,int limit){
+        long diff = value - standard;
+        return !((diff > limit) && (diff > 0) || (diff < 0) && (diff < -limit));
     }
     /**
      * @return theoretical fishers table
@@ -210,40 +195,66 @@ public final class Utils {
             return theorFisher.get(n);
         }
     }
+    /***
+     *
+     * @param pressingLength model's length of pause between clicks (x)
+     * @return Mx's values List, for My use ALPHA = 1
+     */
+    private static double M(Map<String, Long> pressingLength){
+        double x = 0;
+        for (String key : pressingLength.keySet()) {
+            x += pressingLength.get(key);
+        }
+        return x/ pressingLength.size();
+    }
 
+    /**
+     * @param mathExpectation math expectation for full list
+     * @return dispersion on full array
+     */
+    private static double dispersionForFull(double mathExpectation, Map<String, Long> pressingLength){
+        double sum = 0.0;
+        for (String key : pressingLength.keySet()){
+            double x = pressingLength.get(key) - mathExpectation;
+            sum += x * x;
+        }
+        return sqrt(sum / (pressingLength.size() -1));
+    }
+
+    /***
+     *
+     * @param dispersionX Sx
+     * @param dispersionY Sy
+     * @return S for second method , square deviation
+     */
+    private static double meanSquareDeviation(double dispersionX, double dispersionY, int n){
+        double S = ((pow(dispersionX,4) + pow(dispersionY,4)) * (n - 1));
+        return Math.sqrt(S/(2*n-1));
+    }
+
+    private static double getTheoreticalStudent(int n){
+        SparseArray<Double> theorStudent = new SparseArray<Double>();
+        theorStudent.put(10,2.2281389);
+        theorStudent.put(20,2.0859634);
+        theorStudent.put(30,2.0422725);
+        theorStudent.put(40,2.0210754);
+        theorStudent.put(50,2.0085591);
+        theorStudent.put(60,2.0002978);
+        theorStudent.put(70,1.9944371);
+        if(n >=70) return theorStudent.get(70);
+        else if(n >= 60) return theorStudent.get(60);
+        else if(n >= 50) return theorStudent.get(50);
+        else if(n >= 40) return theorStudent.get(40);
+        else if(n >= 30) return theorStudent.get(30);
+        else if(n >= 20) return theorStudent.get(20);
+        else if(n >= 10) return theorStudent.get(10);
+        else             return theorStudent.get(10);
+    }
+
+    public static boolean studentCheck(Map<String,Long> Y,Map<String,Long> X){
+        double My= M(X);
+        double Mx= M(Y);
+        double S = meanSquareDeviation(dispersionForFull(Mx,Y), dispersionForFull(My,X),X.size());
+        return abs(Mx - My)/(S*(sqrt(2/X.size()))) > getTheoreticalStudent(X.size());
+    }
 }
-
-/*
-        List<Double> theorFisher = new ArrayList<Double>();
-        theorFisher.add(3.841);
-        theorFisher.add(5.991);
-        theorFisher.add(7.813);
-        theorFisher.add(9.488);
-        theorFisher.add(11.070);
-        theorFisher.add(12.592);
-        theorFisher.add(14.067);
-        theorFisher.add(15.507);
-        theorFisher.add(16.919);
-        theorFisher.add(18.307);
-        theorFisher.add(18.675);
-        theorFisher.add(21.026);
-        theorFisher.add(22.363);
-        theorFisher.add(23.685);
-        theorFisher.add(24.996);
-        theorFisher.add(26.296);
-        theorFisher.add(27.587);
-        theorFisher.add(28.869);
-        theorFisher.add(30.144);
-        theorFisher.add(31.410);
-        theorFisher.add(32.671);
-        theorFisher.add(33.924);
-        theorFisher.add(35.172);
-        theorFisher.add(36.415);
-        theorFisher.add(37.652);
-        theorFisher.add(38.885);
-        theorFisher.add(40.113);
-        theorFisher.add(41.337);
-        theorFisher.add(42.557);
-        theorFisher.add(43.773);
-        return theorFisher;
-        */
