@@ -119,11 +119,8 @@ public class MainActivity extends AppCompatActivity{
                     del_counter++;
                     current_letter="backspace";
                 }else{
-//                    Log.v("TEXT","------------");
-//                    Log.v("TEXT",s.toString());
 //                    Log.v("TEXT",String.valueOf(s.charAt(start+before)));
 //                    Log.v("TEXT", String.valueOf(start+before));
-//                    Log.v("TEXT","------------");
                     current_letter=String.valueOf(s.charAt(start+before));
                 }
                 String editTextValue = editText.getText().toString().trim();
@@ -137,15 +134,6 @@ public class MainActivity extends AppCompatActivity{
                     standardText=standardText.replace(editTextValue,"<font color='#43A047'>"+editTextValue+"</font>");
                     textView.setText(Html.fromHtml(standardText));
                 }
-//                for (char letter:editTextValue.toCharArray()) {
-//                    if(!text.contains(String.valueOf(letter))){
-//                        Spannable letterToSpan = new SpannableString(String.valueOf(letter));
-//                        letterToSpan.setSpan(new ForegroundColorSpan(Color.RED),0,1,Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                        String span = editTextValue.substring(0, editTextValue.length() - 2) + letterToSpan;
-//                        editText.setText(span);
-//                        editText.setSelection(editText.getText().length());
-//                    }
-//                }
             }
 
             @Override
@@ -158,12 +146,8 @@ public class MainActivity extends AppCompatActivity{
                         pressingLength.put(current_letter+counter++,timer);
                     }
                 }
-                else{
-                    //TODO:make last letter red
-                }
             }
         });
-
     }
 
     public void onClick(View view){
@@ -204,6 +188,7 @@ public class MainActivity extends AppCompatActivity{
                                     (ArrayList<Double>)dispersion,fullTime,del_counter);
                             userList.remove(user);
                             userList.add(verified);
+                            setAccountList();
                             Intent intent=new Intent(this,CongratulationActivity.class).putExtra(Intent.EXTRA_TEXT,user).putExtra("DATA",verified);
                             startActivity(intent);
                         }else {
@@ -212,15 +197,14 @@ public class MainActivity extends AppCompatActivity{
                         }
 
                     }else{
-                        Toast.makeText(getApplicationContext(),"User doesn't exists",Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(this,PreActivity.class));
+                        Toast.makeText(getApplicationContext(),"User doesn't exists",Toast.LENGTH_SHORT).show();
+                        return;
                     }
                 }
-                setAccountList();
             }
         }else {
             Toast.makeText(getApplicationContext(),"Text isn't correct",Toast.LENGTH_LONG).show();
-            editText.clearComposingText();
+            editText.setText("");
         }
     }
 
@@ -232,10 +216,6 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;

@@ -7,6 +7,6 @@ package kpi.security.keyboard.handwriting.data;
  * @author Alex
  */
 public interface Bounds {
-    int BACKSPACES_LIMIT = 4;
-    int TIME_LIMIT = 7000;
+    int BACKSPACES_LIMIT = 3;
+    int TIME_LIMIT = 6000;
 }
