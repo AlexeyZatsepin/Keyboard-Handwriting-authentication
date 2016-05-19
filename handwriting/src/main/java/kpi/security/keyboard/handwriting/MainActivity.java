@@ -197,8 +197,8 @@ public class MainActivity extends AppCompatActivity{
                         }
 
                     }else{
-                        Toast.makeText(getApplicationContext(),"User doesn't exists",Toast.LENGTH_SHORT).show();
-                        return;
+                        //Toast.makeText(getApplicationContext(),"User doesn't exists",Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(this,PreActivity.class));
                     }
                 }
             }
