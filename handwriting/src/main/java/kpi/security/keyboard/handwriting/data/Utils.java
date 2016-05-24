@@ -1,10 +1,7 @@
 package kpi.security.keyboard.handwriting.data;
 
-import android.util.Log;
 import android.util.SparseArray;
-
 import java.util.*;
-
 import static java.lang.Math.*;
 
 /**
@@ -100,7 +97,7 @@ public final class Utils {
      * @return true if sequence converge
      */
     public static boolean fisherCheck(List<Double> SStandard,List<Double> SAuth){
-        Double Fp;
+        double Fp;
         int standardSize = SStandard.size();
         int authSize = SAuth.size();
         /**
@@ -121,13 +118,10 @@ public final class Utils {
             SStandard=temp;
             standardSize=authSize;
         }
-        Log.v("USERLIST Standart",SStandard.toString());
-        Log.v("USERLIST Auth",SAuth.toString());
-
-        Double theoreticalF=getTheoreticalFisher(authSize);
+        double theoreticalF=getTheoreticalFisher(authSize);
         for (int i = 0; i < standardSize; i++) {
-            Double Smin=min(SStandard.get(i),SAuth.get(i));
-            Double Smax=max(SStandard.get(i),SAuth.get(i));
+            double Smin=min(SStandard.get(i),SAuth.get(i));
+            double Smax=max(SStandard.get(i),SAuth.get(i));
             Fp=Smax/Smin;
             if (Fp>theoreticalF){
                 return false;
@@ -171,19 +165,8 @@ public final class Utils {
         theorFisher.put(18,2.1009);
         theorFisher.put(19,2.0930);
         theorFisher.put(20,2.0860);
-        theorFisher.put(21,2.0796);
-        theorFisher.put(22,2.0739);
-        theorFisher.put(23,2.0687);
-        theorFisher.put(24,2.0639);
-        theorFisher.put(25,2.0595);
-        theorFisher.put(26,2.0555);
-        theorFisher.put(27,2.0518);
-        theorFisher.put(28,2.0484);
-        theorFisher.put(29,2.0452);
         theorFisher.put(30,2.0423);
-//40
         theorFisher.put(40,2.0211);
-//60
         theorFisher.put(60,2.0003);
         if( n >= 60){
             return theorFisher.get(60);
@@ -191,7 +174,9 @@ public final class Utils {
             return theorFisher.get(40);
         }else if(n>=30){
             return theorFisher.get(30);
-        }else {
+        }else if(n>=20){
+            return theorFisher.get(20);
+        }else{
             return theorFisher.get(n);
         }
     }

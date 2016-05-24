@@ -9,11 +9,13 @@
     <style name="MyButton" parent="Theme.AppCompat.Light">
         <item name="colorControlHighlight">#0277BD</item>
         <item name="colorButtonNormal">#29B6F6</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 
     <style name="submit" parent="Theme.AppCompat.Light">
         <item name="colorControlHighlight">#455A64</item>
         <item name="colorButtonNormal">#607D8B</item>
+        <item name="android:textColor">#FFFFFF</item>
     </style>
 
 </resources>

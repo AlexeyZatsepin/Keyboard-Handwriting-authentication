@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/secure"
+            android:onClick="onImageClick" android:nestedScrollingEnabled="false"
+            android:layout_marginLeft="127dp" android:layout_marginStart="127dp"
+            android:layout_alignBottom="@+id/login" android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+    <Button
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/logup"
+            android:id="@+id/login"
+            android:onClick="onLogupClick"
+            android:theme="@style/MyButton"
+            android:layout_marginBottom="101dp" android:layout_alignParentBottom="true"
+            android:layout_alignLeft="@+id/logup" android:layout_alignStart="@+id/logup"/>
+    <Button
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="@string/login"
+            android:id="@+id/logup"
+            android:theme="@style/MyButton"
+            android:onClick="onLoginClick"
+            android:layout_alignTop="@+id/imageView1" android:layout_toRightOf="@+id/imageView1"
+            android:layout_toEndOf="@+id/imageView1" android:layout_marginLeft="87dp"
+            android:layout_marginStart="87dp"/>
+</RelativeLayout>

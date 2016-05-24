@@ -1,6 +1,7 @@
 package kpi.security.keyboard.handwriting;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -205,6 +206,7 @@ public class MainActivity extends AppCompatActivity{
         }else {
             Toast.makeText(getApplicationContext(),"Text isn't correct",Toast.LENGTH_LONG).show();
             editText.setText("");
+            fullTime=-System.currentTimeMillis();
         }
     }
 
@@ -218,7 +220,7 @@ public class MainActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            return true;
+            Toast.makeText(this, "Settings opened action", Toast.LENGTH_SHORT).show();
         }else if (id == R.id.action_help){
             showHelp();
         }else if(id== R.id.show_userlist){
@@ -283,5 +285,18 @@ public class MainActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         getAccountList();
+        this.fullTime= - System.currentTimeMillis();
+        this.del_counter=0;
+        this.editText.setText("");
+        this.pressingLength.clear();
+    }
+
+    public static class MainActivityFragment extends Fragment {
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.fragment_main, container, false);
+        }
     }
 }
