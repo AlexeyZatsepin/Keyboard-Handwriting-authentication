@@ -2,11 +2,10 @@ package kpi.security.keyboard.handwriting;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -33,6 +32,15 @@ public class PreActivity extends AppCompatActivity {
                 this, R.anim.rotate_center);
         ImageView myImageView = (ImageView) findViewById(R.id.imageView1);
         myImageView.startAnimation(animationRotateCenter);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            final Animation in = AnimationUtils.loadAnimation(
+                    this, R.anim.button_in);
+            final Animation up = AnimationUtils.loadAnimation(
+                    this, R.anim.button_up);
+            login.startAnimation(in);
+            logup.startAnimation(up);
+        }
     }
     public void onLoginClick(View view){
         startActivity(new Intent(this,MainActivity.class).putExtra("TYPE","recognition"));

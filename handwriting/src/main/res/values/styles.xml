@@ -6,6 +6,7 @@
         <item name="colorPrimaryDark">#0277BD</item>
         <item name="colorPrimary">#29B6F6</item>
     </style>
+
     <style name="MyButton" parent="Theme.AppCompat.Light">
         <item name="colorControlHighlight">#0277BD</item>
         <item name="colorButtonNormal">#29B6F6</item>
