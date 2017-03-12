@@ -1,4 +1,4 @@
-package kpi.security.keyboard.handwriting;
+package com.security.keyboard.handwriting;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -18,7 +18,6 @@ import android.widget.ImageView;
  * @author Alex
  */
 public class PreActivity extends AppCompatActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

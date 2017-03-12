@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/KeyboardHandwriting.iml" filepath="$PROJECT_DIR$/.idea/modules/KeyboardHandwriting.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/handwriting/handwriting.iml" filepath="$PROJECT_DIR$/.idea/modules/handwriting/handwriting.iml" />
+      <module fileurl="file://$PROJECT_DIR$/KeyboardHandwriting.iml" filepath="$PROJECT_DIR$/KeyboardHandwriting.iml" />
+      <module fileurl="file://$PROJECT_DIR$/handwriting/handwriting.iml" filepath="$PROJECT_DIR$/handwriting/handwriting.iml" />
     </modules>
   </component>
 </project>

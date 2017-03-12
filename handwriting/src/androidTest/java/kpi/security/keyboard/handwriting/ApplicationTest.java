@@ -1,4 +1,4 @@
-package kpi.security.keyboard.handwriting;
+package com.security.keyboard.handwriting;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

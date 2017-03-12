@@ -1,19 +1,17 @@
-package kpi.security.keyboard.handwriting;
+package com.security.keyboard.handwriting;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.text.Spanned;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import kpi.security.keyboard.handwriting.data.Account;
 
-import java.text.DecimalFormat;
-import java.util.HashMap;
+import com.security.keyboard.handwriting.model.Account;
+
 import java.util.List;
 import java.util.Map;
 

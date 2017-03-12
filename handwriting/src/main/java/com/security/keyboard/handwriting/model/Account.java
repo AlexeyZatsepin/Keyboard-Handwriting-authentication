@@ -1,10 +1,13 @@
-package kpi.security.keyboard.handwriting.data;
+package com.security.keyboard.handwriting.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * KeyboardHandwriting
@@ -16,12 +19,12 @@ import java.util.HashMap;
 // User class for save istance in android when app is destroyed //Bundle.putParcelable()
 public class Account implements Parcelable{
     private String username;
-    private HashMap<String,Long> y; //TODO ArrayList
-    private ArrayList<Double> s; //TODO ArrayList
+    private Map<String,Long> y; //Serializable
+    private List<Double> s; //Serializable
     private long fullTime;
     private int delCounter;
 
-    public Account(String username, HashMap<String, Long> y, ArrayList<Double> s, long fullTime, int delCounter) {
+    public Account(String username, Map<String, Long> y, List<Double> s, long fullTime, int delCounter) {
         this.username = username;
         this.y = y;
         this.s = s;
@@ -31,8 +34,8 @@ public class Account implements Parcelable{
 
     public Account(Parcel in) {
         username=in.readString();
-        y= (HashMap<String, Long>) in.readSerializable();
-        s= (ArrayList<Double>) in.readSerializable();
+        y = (Map<String, Long>) in.readSerializable();
+        s = (List<Double>) in.readSerializable();
         fullTime=in.readLong();
         delCounter=in.readInt();
     }
@@ -57,8 +60,8 @@ public class Account implements Parcelable{
     @Override
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(username);
-        out.writeSerializable(y);
-        out.writeSerializable(s);
+        out.writeSerializable((HashMap) y);
+        out.writeSerializable((HashMap) s);
         out.writeLong(fullTime);
         out.writeInt(delCounter);
     }
@@ -82,19 +85,19 @@ public class Account implements Parcelable{
         this.username = username;
     }
 
-    public HashMap<String, Long> getY() {
+    public Map<String, Long> getY() {
         return y;
     }
 
-    public void setY(HashMap<String, Long> y) {
+    public void setY(Map<String, Long> y) {
         this.y = y;
     }
 
-    public ArrayList<Double> getS() {
+    public List<Double> getS() {
         return s;
     }
 
-    public void setS(ArrayList<Double> s) {
+    public void setS(List<Double> s) {
         this.s = s;
     }
 

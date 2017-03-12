@@ -1,4 +1,4 @@
-package kpi.security.keyboard.handwriting.data;
+package com.security.keyboard.handwriting.model;
 
 /**
  * KeyboardHandwriting

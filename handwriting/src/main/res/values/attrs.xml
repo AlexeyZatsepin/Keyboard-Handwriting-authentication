@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SecureConfirmationLayout">
+        <attr name="text" format="string" localization="suggested" />
+        <attr name="type" >
+            <enum name="study" value="1" />
+            <enum name="recognition" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>

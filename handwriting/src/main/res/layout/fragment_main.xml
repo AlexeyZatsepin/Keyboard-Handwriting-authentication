@@ -1,6 +1,7 @@
 <ScrollView android:layout_width="match_parent"
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_height="wrap_content">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
@@ -16,29 +17,11 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Large Text"
             android:id="@+id/title" android:layout_marginLeft="100dp" android:textStyle="bold"/>
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/label_user"
-            android:id="@+id/label_user" android:layout_marginTop="20dp" android:textStyle="italic"/>
-    <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/username"
-            />
-    <TextView
-            android:text="@string/plain_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/textView" android:textSize="24sp"
-            android:textStyle="italic"/>
-    <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText"
-            android:inputType="none"/>
+    <com.security.keyboard.handwriting.ui.SecureConfirmationLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/confirm_layout"
+        custom:type="recognition"/>
     <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="150dp"
