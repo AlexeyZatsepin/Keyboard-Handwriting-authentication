@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">keyboard_handwriting_layout</string>
+    <string name="label_user">Username:</string>
+    <string name="plain_text">I certify, that it is my account and I have all benefits to this sensitive information.</string>
+    <string name="recognition_mode">recognition</string>
+    <string name="study_mode">study</string>
+</resources>

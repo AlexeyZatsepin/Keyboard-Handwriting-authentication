@@ -3,7 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/KeyboardHandwriting.iml" filepath="$PROJECT_DIR$/KeyboardHandwriting.iml" />
-      <module fileurl="file://$PROJECT_DIR$/handwriting/handwriting.iml" filepath="$PROJECT_DIR$/handwriting/handwriting.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/keyboard_handwriting_layout/keyboard_handwriting_layout.iml" filepath="$PROJECT_DIR$/keyboard_handwriting_layout/keyboard_handwriting_layout.iml" />
     </modules>
   </component>
 </project>
