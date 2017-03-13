@@ -17,7 +17,7 @@ public class SecurityContext {
     /**
      * full list of users, analog db, stored in shared preferences
      */
-    private static List<Account> userList= new ArrayList<Account>();
+    private static List<Account> userList;
 
     public static void save(Context context){
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
@@ -34,6 +34,9 @@ public class SecurityContext {
         String json = sharedPrefs.getString(USERLIST_TAG , null);
         Type type = new TypeToken<List<Account>>() {}.getType();
         userList = gson.fromJson(json, type);
+        if (userList == null){
+            userList = new ArrayList<>();
+        }
     }
 
     public static List<Account> getUserList() {
